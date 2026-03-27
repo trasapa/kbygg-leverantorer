@@ -18,7 +18,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5}
   .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.75rem;display:flex;align-items:center;gap:1.25rem;height:54px;position:sticky;top:0;z-index:100}
-  .logo{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;border-right:1px solid var(--border);padding-right:1.25rem}
+  .logo{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:#F26522;letter-spacing:.08em;text-transform:uppercase;border-right:1px solid var(--border);padding-right:1.25rem}
   .topbar-title{font-size:14px;font-weight:600;color:var(--text);flex:1}
   .topbar-actions{display:flex;align-items:center;gap:8px}
   .status-area{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;padding:0 1rem;border-left:1px solid var(--border);border-right:1px solid var(--border);white-space:nowrap}
@@ -39,9 +39,9 @@
   .btn-cancel:hover{background:var(--border)}
   .container{max-width:1080px;margin:0 auto;padding:1.75rem}
   .list-area{min-width:0}
-  .cat-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.25rem;overflow:hidden}
+  .cat-panel{background:#1a1f30;border:1px solid #3a4060;border-radius:var(--radius);margin-bottom:1.25rem;overflow:hidden}
   .cat-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;user-select:none;transition:background .15s}
-  .cat-panel-hdr:hover{background:var(--surface2)}
+  .cat-panel-hdr:hover{background:#222840}
   .cat-panel-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:8px}
   .cat-panel-title span.ccount{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);background:var(--surface3);border:1px solid var(--border);border-radius:999px;padding:1px 7px}
   .cat-panel-body{border-top:1px solid var(--border);padding:14px}
@@ -86,11 +86,12 @@
   .edit-grid input,.edit-grid select{font-size:12px;height:30px}
   .contacts-area{border-top:1px solid var(--border);padding:11px 14px;background:var(--surface2)}
   .contacts-lbl{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
-  .contact-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:center;padding:6px 10px;background:var(--surface);border-radius:var(--radius-xs);margin-bottom:4px;border:1px solid var(--border)}
+  .contact-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto auto;gap:8px;align-items:center;padding:6px 10px;background:var(--surface);border-radius:var(--radius-xs);margin-bottom:4px;border:1px solid var(--border)}
   .contact-row span{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
   .contact-row span.mail{color:var(--accent-text)}
+  .contact-row span.tel{color:var(--text2)}
   .contact-row span.note{color:var(--text2);font-size:11px}
-  .add-con-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin-top:7px}
+  .add-con-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;margin-top:7px}
   .add-con-row input{height:29px;font-size:12px}
   .empty{font-size:12px;color:var(--text3);font-style:italic;padding:3px 0 7px}
   .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(14px);background:var(--surface3);color:var(--text);border:1px solid var(--border2);font-size:12px;padding:8px 18px;border-radius:var(--radius);opacity:0;transition:opacity .22s,transform .22s;pointer-events:none;z-index:9999;font-family:'JetBrains Mono',monospace}
@@ -130,14 +131,22 @@
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:1.25rem">
-    <div class="card-title">Ny leverantör</div>
-    <div class="form-row">
-      <div class="field"><label>Namn</label><input type="text" id="inp-name" placeholder="Företagsnamn" onkeydown="if(event.key==='Enter')addSupplier()"></div>
-      <div class="field"><label>Kategori</label><select id="inp-cat"></select></div>
-      <div class="field"><label>Portal (URL)</label><input type="text" id="inp-portal" placeholder="https://..."></div>
-      <div class="chk-field"><label>Avtal</label><input type="checkbox" id="inp-avtal"></div>
-      <button class="btn btn-accent" onclick="addSupplier()" style="align-self:end">+ Lägg till</button>
+  <div class="cat-panel" id="sup-panel" style="margin-bottom:1.25rem">
+    <div class="cat-panel-hdr" onclick="toggleSupPanel()">
+      <div class="cat-panel-title">
+        <span class="arrow" id="sup-arrow">▶</span>
+        Ny leverantör
+      </div>
+      <span style="font-size:11px;color:var(--text3)" id="sup-hint">Klicka för att lägga till</span>
+    </div>
+    <div class="cat-panel-body" id="sup-body" style="display:none">
+      <div class="form-row">
+        <div class="field"><label>Namn</label><input type="text" id="inp-name" placeholder="Företagsnamn" onkeydown="if(event.key==='Enter')addSupplier()"></div>
+        <div class="field"><label>Kategori</label><select id="inp-cat"></select></div>
+        <div class="field"><label>Portal (URL)</label><input type="text" id="inp-portal" placeholder="https://..."></div>
+        <div class="chk-field"><label>Avtal</label><input type="checkbox" id="inp-avtal"></div>
+        <button class="btn btn-accent" onclick="addSupplier()" style="align-self:end">+ Lägg till</button>
+      </div>
     </div>
   </div>
   <div id="list"></div>
@@ -164,6 +173,17 @@ async function init(){
     toast('Kunde inte hämta data: '+e.message);
     loadData({cats:DEFAULT,data:{}});
   }
+}
+
+function toggleSupPanel(){
+  const body=document.getElementById('sup-body');
+  const arrow=document.getElementById('sup-arrow');
+  const hint=document.getElementById('sup-hint');
+  const open=body.style.display==='none';
+  body.style.display=open?'block':'none';
+  arrow.className='arrow'+(open?' open':'');
+  hint.textContent=open?'':'Klicka för att lägga till';
+  if(open)setTimeout(()=>document.getElementById('inp-name').focus(),50);
 }
 
 function toggleCatPanel(){
@@ -309,12 +329,32 @@ function saveEdit(cat,id){
 function addContact(cat,sid){
   const n=document.getElementById('cn-'+sid).value.trim();
   const m=document.getElementById('cm-'+sid).value.trim();
+  const p=document.getElementById('cp-'+sid).value.trim();
   const k=document.getElementById('ck-'+sid).value.trim();
   if(!n)return;
-  findSup(cat,sid).contacts.push({id:Date.now(),name:n,mail:m,kommentar:k});
+  findSup(cat,sid).contacts.push({id:Date.now(),name:n,mail:m,tel:p,kommentar:k});
   markUnsaved();render();
 }
 
+function editContact(cat,sid,cid){
+  const sup=findSup(cat,sid);
+  sup.contacts.forEach(c=>c.editing=false);
+  sup.contacts.find(c=>c.id===cid).editing=true;
+  render();
+}
+function cancelEditContact(cat,sid,cid){
+  findSup(cat,sid).contacts.find(c=>c.id===cid).editing=false;
+  render();
+}
+function saveContact(cat,sid,cid){
+  const c=findSup(cat,sid).contacts.find(c=>c.id===cid);
+  c.name=document.getElementById('een-'+cid).value.trim()||c.name;
+  c.mail=document.getElementById('eem-'+cid).value.trim();
+  c.tel=document.getElementById('eep-'+cid).value.trim();
+  c.kommentar=document.getElementById('eek-'+cid).value.trim();
+  c.editing=false;
+  markUnsaved();render();
+}
 function removeContact(cat,sid,cid){
   findSup(cat,sid).contacts=findSup(cat,sid).contacts.filter(c=>c.id!==cid);
   markUnsaved();render();
@@ -368,16 +408,28 @@ function render(){
           <div class="contacts-area">
             <div class="contacts-lbl">Kontakter</div>
             ${s.contacts.length?s.contacts.map(c=>`
+              ${c.editing?`
+              <div class="contact-row">
+                <input type="text" id="een-${c.id}" value="${c.name||''}" placeholder="Namn" style="height:26px;font-size:12px">
+                <input type="text" id="eem-${c.id}" value="${c.mail||''}" placeholder="E-post" style="height:26px;font-size:12px">
+                <input type="text" id="eep-${c.id}" value="${c.tel||''}" placeholder="Telefon" style="height:26px;font-size:12px">
+                <input type="text" id="eek-${c.id}" value="${c.kommentar||''}" placeholder="Kommentar" style="height:26px;font-size:12px">
+                <button class="btn-ghost" onclick="saveContact('${cat}',${s.id},${c.id})" style="font-size:11px;color:var(--green-text)">✓</button>
+                <button class="btn-ghost danger" onclick="cancelEditContact('${cat}',${s.id},${c.id})" style="font-size:11px">✕</button>
+              </div>`:`
               <div class="contact-row">
                 <span>${c.name}</span>
                 <span class="mail">${c.mail||'—'}</span>
+                <span class="tel">${c.tel||'—'}</span>
                 <span class="note">${c.kommentar||'—'}</span>
-                <button class="btn-ghost danger" onclick="removeContact('${cat}',${s.id},${c.id})" style="font-size:11px">✕</button>
-              </div>
+                <button class="btn-ghost" onclick="editContact('${cat}',${s.id},${c.id})" style="font-size:11px" title="Redigera">✏️</button>
+                <button class="btn-ghost danger" onclick="removeContact('${cat}',${s.id},${c.id})" style="font-size:11px" title="Ta bort">✕</button>
+              </div>`}
             `).join(''):'<p class="empty">Inga kontakter tillagda.</p>'}
             <div class="add-con-row">
               <input type="text" id="cn-${s.id}" placeholder="Namn">
               <input type="text" id="cm-${s.id}" placeholder="E-post">
+              <input type="text" id="cp-${s.id}" placeholder="Telefon">
               <input type="text" id="ck-${s.id}" placeholder="Kommentar">
               <button class="btn btn-accent btn-sm" onclick="addContact('${cat}',${s.id})">+</button>
             </div>
